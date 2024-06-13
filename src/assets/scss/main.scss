@@ -1,0 +1,10 @@
+@font-face {
+    font-family: "IRANSans";
+    font-style: normal;
+    font-weight: 500;
+    src: url(@/assets/fonts/IRANSans/persian/IRANSansWebFaNum_Medium.woff2) format("woff2");
+  }
+
+  * {
+    font-family: "IRANSans";
+  }
