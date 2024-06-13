@@ -110,7 +110,6 @@
 </template>
 
 <script setup lang="ts">
-import NabvarItem from "@/components/NabvarItem.vue";
 </script>
 
 <style scoped>
