@@ -4,17 +4,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import EventService from '@/services/EventService';
 
 const events = ref(null)
 console.log('test')
 onMounted(() => {
-    axios.get(
-        'https://my-json-server.typicode.com/code-pop/real-world_vue-3/events'
-    )
+    EventService.getEvents()
     .then((response) => {
-        events.value = response.data
-        console.log('events: ', response.data)
+        console.log('elyas: ', response.data)
     })
     .catch((error) => {
         console.log('error:', error )
