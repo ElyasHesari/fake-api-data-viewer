@@ -19,13 +19,27 @@
       />
     </div>
     <div class="px-15 mt-15 mb-10">
-      <Table />
+      <Table  />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue'
+import EventService from '@/services/EventService';
 
+onMounted(() => {
+    EventService.getEvents()
+    .then((response) => {
+        console.log('index: ', response.data)
+        console.log(666666666)
+    })
+    .catch((error) => {
+        console.log('error:', error )
+        console.log(555555555)
+
+    })
+})
 </script>
 <style scoped>
 .container {
