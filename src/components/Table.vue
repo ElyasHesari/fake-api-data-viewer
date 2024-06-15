@@ -3,13 +3,11 @@
     dir="rtl"
     :headers="headers"
     :items="desserts"
-    :sort-by="[{ key: 'calories', order: 'asc' }]"
+    :sort-by="[{ key: 'category', order: 'asc' }]"
   >
     <template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>نام جدول</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
+        
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ props }">
             <v-btn class="mb-2 text-h6" color="green" dark v-bind="props">
@@ -32,26 +30,26 @@
                   </v-col>
                   <v-col cols="12" md="4" sm="6">
                     <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
+                      v-model="editedItem.category"
+                      label="category"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" md="4" sm="6">
                     <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
+                      v-model="editedItem.location"
+                      label="location (g)"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" md="4" sm="6">
                     <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
+                      v-model="editedItem.organizer"
+                      label="organizer (g)"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" md="4" sm="6">
                     <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
+                      v-model="editedItem.time"
+                      label="time (g)"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -89,13 +87,16 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-toolbar-title class="text-right mr-4">نام جدول</v-toolbar-title>
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon class="me-2" size="small" @click="editItem(item)">
         mdi-pencil
       </v-icon>
-      <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon size="small" @click="deleteItem(item)" color="red"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Reset </v-btn>
@@ -106,36 +107,37 @@
 <script setup>
 import { reactive, computed, watch, onMounted, ref } from "vue";
 
+const props = defineProps(['events'])
 const dialog = ref(false);
 const dialogDelete = ref(false);
 const headers = [
   {
-    title: "Dessert (100g serving)",
+    title: "title",
     align: "start",
     sortable: false,
-    key: "name",
+    key: "title",
   },
-  { title: "Calories", key: "calories" },
-  { title: "Fat (g)", key: "fat" },
-  { title: "Carbs (g)", key: "carbs" },
-  { title: "Protein (g)", key: "protein" },
+  { title: "category", key: "category" },
+  { title: "location", key: "location" },
+  { title: "organizer", key: "organizer" },
+  { title: "time", key: "time" },
   { title: "Actions", key: "actions", sortable: false },
 ];
-const desserts = reactive([]);
+const desserts = ref([]);
 const editedIndex = ref(-1);
 const editedItem = reactive({
   name: "",
-  calories: 0,
-  fat: 0,
-  carbs: 0,
-  protein: 0,
+  category: 0,
+  location: 0,
+  organizer: 0,
+  time: 0,
 });
 const defaultItem = {
   name: "",
-  calories: 0,
-  fat: 0,
-  carbs: 0,
-  protein: 0,
+  category: "",
+  location: "",
+  organizer: "",
+  time: 0,
 };
 
 const formTitle = computed(() => {
@@ -159,102 +161,33 @@ onMounted(() => {
 });
 
 function initialize() {
-  desserts.push(
-    {
-      name: "Frozen Yogurt",
-      calories: 159,
-      fat: 6.0,
-      carbs: 24,
-      protein: 4.0,
-    },
-    {
-      name: "Ice cream sandwich",
-      calories: 237,
-      fat: 9.0,
-      carbs: 37,
-      protein: 4.3,
-    },
-    {
-      name: "Eclair",
-      calories: 262,
-      fat: 16.0,
-      carbs: 23,
-      protein: 6.0,
-    },
-    {
-      name: "Cupcake",
-      calories: 305,
-      fat: 3.7,
-      carbs: 67,
-      protein: 4.3,
-    },
-    {
-      name: "Gingerbread",
-      calories: 356,
-      fat: 16.0,
-      carbs: 49,
-      protein: 3.9,
-    },
-    {
-      name: "Jelly bean",
-      calories: 375,
-      fat: 0.0,
-      carbs: 94,
-      protein: 0.0,
-    },
-    {
-      name: "Lollipop",
-      calories: 392,
-      fat: 0.2,
-      carbs: 98,
-      protein: 0,
-    },
-    {
-      name: "Honeycomb",
-      calories: 408,
-      fat: 3.2,
-      carbs: 87,
-      protein: 6.5,
-    },
-    {
-      name: "Donut",
-      calories: 452,
-      fat: 25.0,
-      carbs: 51,
-      protein: 4.9,
-    },
-    {
-      name: "KitKat",
-      calories: 518,
-      fat: 26.0,
-      carbs: 65,
-      protein: 7,
-    }
-  );
+  desserts.value = props.events
+  console.log('desserts desserts', desserts.value)
+
 }
 
 function editItem(item) {
-  editedIndex.value = desserts.indexOf(item);
+  editedIndex.value = desserts.value.indexOf(item);
   editedItem.name = item.name;
-  editedItem.calories = item.calories;
-  editedItem.fat = item.fat;
-  editedItem.carbs = item.carbs;
-  editedItem.protein = item.protein;
+  editedItem.category = item.category;
+  editedItem.location = item.location;
+  editedItem.organizer = item.organizer;
+  editedItem.time = item.time;
   dialog.value = true;
 }
 
 function deleteItem(item) {
-  editedIndex.value = desserts.indexOf(item);
+  editedIndex.value = desserts.value.indexOf(item);
   editedItem.name = item.name;
-  editedItem.calories = item.calories;
-  editedItem.fat = item.fat;
-  editedItem.carbs = item.carbs;
-  editedItem.protein = item.protein;
+  editedItem.category = item.category;
+  editedItem.location = item.location;
+  editedItem.organizer = item.organizer;
+  editedItem.time = item.time;
   dialogDelete.value = true;
 }
 
 function deleteItemConfirm() {
-  desserts.splice(editedIndex.value, 1);
+  desserts.value.splice(editedIndex.value, 1);
   closeDelete();
 }
 
@@ -262,10 +195,10 @@ function close() {
   dialog.value = false;
   nextTick(() => {
     editedItem.name = defaultItem.name;
-    editedItem.calories = defaultItem.calories;
-    editedItem.fat = defaultItem.fat;
-    editedItem.carbs = defaultItem.carbs;
-    editedItem.protein = defaultItem.protein;
+    editedItem.category = defaultItem.category;
+    editedItem.location = defaultItem.location;
+    editedItem.organizer = defaultItem.organizer;
+    editedItem.time = defaultItem.time;
     editedIndex.value = -1;
   });
 }
@@ -274,10 +207,10 @@ function closeDelete() {
   dialogDelete.value = false;
   nextTick(() => {
     editedItem.name = defaultItem.name;
-    editedItem.calories = defaultItem.calories;
-    editedItem.fat = defaultItem.fat;
-    editedItem.carbs = defaultItem.carbs;
-    editedItem.protein = defaultItem.protein;
+    editedItem.category = defaultItem.category;
+    editedItem.location = defaultItem.location;
+    editedItem.organizer = defaultItem.organizer;
+    editedItem.time = defaultItem.time;
     editedIndex.value = -1;
   });
 }
@@ -286,7 +219,7 @@ function save() {
   if (editedIndex.value > -1) {
     Object.assign(desserts[editedIndex.value], editedItem);
   } else {
-    desserts.push({ ...editedItem });
+    desserts.value.push({ ...editedItem });
   }
   close();
 }

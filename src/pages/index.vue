@@ -19,7 +19,8 @@
       />
     </div>
     <div class="px-15 mt-15 mb-10">
-      <Table  />
+      <div v-if="isLoading">Loading ...</div>
+      <Table v-else :events="events" />
     </div>
   </div>
 </template>
@@ -28,18 +29,25 @@
 import { onMounted } from 'vue'
 import EventService from '@/services/EventService';
 
+const events = ref([])
+const isLoading = ref(true)
+
 onMounted(() => {
     EventService.getEvents()
-    .then((response) => {
-        console.log('index: ', response.data)
-        console.log(666666666)
+    .then((response:any) => {
+        // console.log('events => ', response.data)
+        events.value = response.data
+        
     })
-    .catch((error) => {
-        console.log('error:', error )
-        console.log(555555555)
+    .catch((error:any) => {
+        console.log('error event => ', error )
 
     })
+    .finally(() => {
+      isLoading.value = false
+    })
 })
+
 </script>
 <style scoped>
 .container {
